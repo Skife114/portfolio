@@ -864,70 +864,47 @@
 
 <script>
 /*
-  Attempts to auto-load the latest video from the YouTube channel via its RSS feed,
-  routed through a public CORS proxy (since YouTube RSS doesn't allow direct
-  browser-side fetches). This is a best-effort static-site approach:
-  - If the proxy or feed lookup fails for any reason, the fallback "Visit Channel"
-    button (already in the HTML) stays visible -- nothing breaks.
-  - For guaranteed reliability, swap this out later for a small serverless function
-    using the official YouTube Data API (see conversation notes / ask Claude).
+  Loads the latest videos from the YouTube channel via a Netlify Function
+  (netlify/functions/latest-videos.js), which uses the official YouTube
+  Data API server-side -- reliable, no CORS issues, no public relay needed.
+
+  If the function isn't deployed yet, or the API call fails for any reason,
+  this fails silently and the "Visit Channel" fallback button (already in
+  the HTML) stays visible -- nothing breaks either way.
 */
-(async function loadLatestVideo() {
-  const handle = 'FlaviusEnavius';
+(async function loadLatestVideos() {
   const embedTarget = document.getElementById('yt-embed-target');
-  const fallback = document.getElementById('yt-fallback');
-  const proxy = 'https://api.allorigins.win/raw?url=';
+  const uploadsRow = document.getElementById('uploadsRow');
 
   try {
-    // Step 1: resolve the handle to a channel ID by reading the channel page.
-    const channelPageUrl = `https://www.youtube.com/@${handle}`;
-    const pageRes = await fetch(proxy + encodeURIComponent(channelPageUrl));
-    if (!pageRes.ok) throw new Error('channel page fetch failed');
-    const pageHtml = await pageRes.text();
-    const match = pageHtml.match(/"channelId":"(UC[a-zA-Z0-9_-]{20,})"/);
-    if (!match) throw new Error('channel id not found');
-    const channelId = match[1];
+    const res = await fetch('/.netlify/functions/latest-videos');
+    if (!res.ok) throw new Error('function request failed');
+    const data = await res.json();
+    const videos = data.videos || [];
+    if (!videos.length) throw new Error('no videos returned');
 
-    // Step 2: fetch the channel's RSS feed (contains the most recent uploads).
-    const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-    const feedRes = await fetch(proxy + encodeURIComponent(feedUrl));
-    if (!feedRes.ok) throw new Error('feed fetch failed');
-    const feedXml = await feedRes.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(feedXml, 'text/xml');
-    const firstEntry = doc.querySelector('entry');
-    if (!firstEntry) throw new Error('no entries in feed');
-    const videoId = firstEntry.querySelector('videoId') ?.textContent
-      || firstEntry.getElementsByTagNameNS('*', 'videoId')[0]?.textContent;
-    if (!videoId) throw new Error('video id not found in entry');
-
-    // Step 3: swap the fallback for a real embedded player.
+    // Latest video -> embedded player
+    const [latest, ...rest] = videos;
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-    iframe.title = 'Latest video';
+    iframe.src = `https://www.youtube.com/embed/${latest.id}`;
+    iframe.title = latest.title || 'Latest video';
     iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
     iframe.allowFullscreen = true;
     embedTarget.innerHTML = '';
     embedTarget.appendChild(iframe);
 
-    // Step 4: populate a small grid of the next few recent uploads (thumbnails).
-    const uploadsRow = document.getElementById('uploadsRow');
+    // Remaining videos -> recent uploads thumbnail grid
     if (uploadsRow) {
-      const entries = Array.from(doc.querySelectorAll('entry')).slice(1, 5);
-      entries.forEach(entry => {
-        const vId = entry.querySelector('videoId')?.textContent
-          || entry.getElementsByTagNameNS('*', 'videoId')[0]?.textContent;
-        const title = entry.querySelector('title')?.textContent || 'Video';
-        if (!vId) return;
+      rest.slice(0, 4).forEach(v => {
         const link = document.createElement('a');
-        link.href = `https://www.youtube.com/watch?v=${vId}`;
+        link.href = `https://www.youtube.com/watch?v=${v.id}`;
         link.target = '_blank';
         link.rel = 'noopener';
         link.className = 'upload-thumb';
-        link.title = title;
+        link.title = v.title || 'Video';
         const img = document.createElement('img');
-        img.src = `https://i.ytimg.com/vi/${vId}/hqdefault.jpg`;
-        img.alt = title;
+        img.src = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
+        img.alt = v.title || 'Video thumbnail';
         img.loading = 'lazy';
         link.appendChild(img);
         uploadsRow.appendChild(link);
