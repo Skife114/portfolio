@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathieu Skif — Data Analyst</title>
+<meta name="description" content="Mathieu Skif — Data Analyst specializing in Power BI, business intelligence, and data-driven insight.">
+<meta property="og:title" content="Mathieu Skif — Data Analyst">
+<meta property="og:description" content="Power BI dashboards, data modeling, and business intelligence work — plus a look at where data meets gaming.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B1F23'/%3E%3Crect x='22' y='55' width='14' height='28' fill='%234FA8D8'/%3E%3Crect x='43' y='38' width='14' height='45' fill='%234FA8D8'/%3E%3Crect x='64' y='22' width='14' height='61' fill='%234FA8D8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1B1F23;
+    --panel: #242A30;
+    --panel-2: #2C333A;
+    --line: #3A424A;
+    --text: #E8E6E1;
+    --text-dim: #A7AFB6;
+    --accent: #4FA8D8;
+    --accent-dim: #2E6E92;
+    --gold: #D4A537;
+    --gold-dim: #8C6E28;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', sans-serif;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  img{max-width:100%; display:block;}
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+  @media (max-width:600px){ .wrap{ padding:0 18px; } }
+
+  /* ---- Nav ---- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(27,31,35,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .logo{ font-weight:600; font-size:1.05rem; }
+  .logo span{ color:var(--accent); }
+  .navlinks{ display:flex; gap:28px; font-size:0.92rem; }
+  .navlinks a{
+    text-decoration:none; color:var(--text-dim);
+    transition:color .2s ease;
+  }
+  .navlinks a:hover{ color:var(--text); }
+  .navlinks a:focus-visible, a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px;}
+  .nav-toggle{ display:none; }
+  @media (max-width:640px){
+    .navlinks{ display:none; }
+    .nav-toggle{
+      display:flex; align-items:center; justify-content:center;
+      width:38px; height:38px;
+      background:none; border:1px solid var(--line); border-radius:8px;
+      color:var(--text); cursor:pointer;
+    }
+  }
+  .mobile-panel{
+    display:none;
+    flex-direction:column;
+    border-bottom:1px solid var(--line);
+    background:var(--bg);
+  }
+  .mobile-panel.open{ display:flex; }
+  .mobile-panel a{
+    padding:14px 24px;
+    text-decoration:none; color:var(--text-dim);
+    border-top:1px solid var(--line);
+    font-size:0.95rem;
+  }
+  .mobile-panel a:hover{ color:var(--text); }
+
+  /* Search */
+  .search-wrap{
+    display:flex; align-items:center; gap:8px;
+  }
+  .search-input{
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--text);
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:0.85rem;
+    font-family:'IBM Plex Sans', sans-serif;
+    width:170px;
+    transition:width .2s ease, border-color .2s ease;
+  }
+  .search-input:focus{ outline:none; border-color:var(--accent); width:220px; }
+  .search-input::placeholder{ color:var(--text-dim); }
+  @media (max-width:640px){ .search-wrap.desktop-search{ display:none; } }
+  .mobile-search{
+    padding:14px 24px;
+    border-top:1px solid var(--line);
+  }
+  .mobile-search .search-input{ width:100%; }
+  .search-highlight{
+    animation:searchPulse 1.6s ease;
+    border-radius:6px;
+  }
+  @keyframes searchPulse{
+    0%{ box-shadow:0 0 0 0 rgba(79,168,216,0.6); }
+    100%{ box-shadow:0 0 0 14px rgba(79,168,216,0); }
+  }
+  .search-no-match{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--panel); border:1px solid var(--line);
+    color:var(--text-dim); font-size:0.85rem;
+    padding:10px 18px; border-radius:8px; z-index:200;
+  }
+
+  /* ---- Hero ---- */
+  header.hero{
+    padding:88px 0 56px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--accent);
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  h1.name{
+    font-size:clamp(2.4rem, 5vw, 3.6rem);
+    font-weight:700;
+  }
+  .role{
+    font-size:1.15rem;
+    color:var(--text-dim);
+    margin-top:10px;
+    max-width:620px;
+  }
+  .hero-actions{
+    margin-top:28px;
+    display:flex; gap:14px; flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 20px;
+    border-radius:8px;
+    font-size:0.9rem; font-weight:500;
+    text-decoration:none;
+    border:1px solid var(--line);
+    transition:all .2s ease;
+  }
+  .btn-primary{ background:var(--accent); color:#0D1013; border-color:var(--accent); }
+  .btn-primary:hover{ background:#69B8E0; }
+  .btn-ghost{ color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* KPI strip -- signature element, styled like his own BI dashboards */
+  .kpi-strip{
+    margin-top:44px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--panel);
+  }
+  .kpi{
+    padding:20px 22px;
+    border-right:1px solid var(--line);
+  }
+  .kpi:last-child{ border-right:none; }
+  .kpi .val{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1.6rem;
+    color:var(--accent);
+    font-weight:500;
+  }
+  .kpi .lbl{
+    font-size:0.78rem;
+    color:var(--text-dim);
+    margin-top:4px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+  }
+  @media (max-width:700px){
+    .kpi-strip{ grid-template-columns:repeat(2,1fr); }
+    .kpi:nth-child(2){ border-right:none; }
+  }
+
+  /* ---- Sections ---- */
+  section{ padding:64px 0; border-bottom:1px solid var(--line); scroll-margin-top:64px; }
+  header.hero{ scroll-margin-top:64px; }
+  .skip-link{
+    position:absolute; left:-999px; top:0;
+    background:var(--accent); color:#0D1013;
+    padding:10px 16px; border-radius:0 0 8px 0;
+    z-index:100; font-size:0.85rem; text-decoration:none;
+  }
+  .skip-link:focus{ left:0; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ transition:none !important; }
+  }
+  .section-head{
+    display:flex; align-items:baseline; gap:14px;
+    margin-bottom:32px;
+  }
+  .section-num{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--accent);
+    font-size:0.85rem;
+  }
+  .section-head h2{ font-size:1.7rem; }
+
+  /* About */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:48px;
+  }
+  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-text p{ color:var(--text-dim); }
+  .about-text strong{ color:var(--text); font-weight:600; }
+  .side-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px;
+  }
+  .side-card h3{ font-size:0.95rem; margin-bottom:14px; color:var(--accent); }
+  .timeline-item{
+    padding-bottom:14px; margin-bottom:14px;
+    border-bottom:1px solid var(--line);
+    font-size:0.9rem;
+  }
+  .timeline-item:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .timeline-item .t-title{ font-weight:500; }
+  .timeline-item .t-sub{ color:var(--text-dim); font-size:0.82rem; margin-top:2px; }
+
+  /* Skills */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:14px;
+  }
+  .skill-tag{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 16px;
+    font-size:0.88rem;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  /* Projects */
+  .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+  }
+  @media (max-width:800px){ .projects-grid{ grid-template-columns:1fr; } }
+  .project-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px;
+    display:flex; flex-direction:column;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .project-card:hover{ border-color:var(--accent-dim); transform:translateY(-2px); }
+  .project-thumb{
+    width:100%; aspect-ratio:16/10; object-fit:cover;
+    border-radius:8px; margin-bottom:16px;
+    border:1px solid var(--line);
+    background:var(--panel-2);
+  }
+  .project-card{ cursor:pointer; }
+  .project-card:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* Project modal */
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0; z-index:300;
+    background:rgba(10,12,14,0.82);
+    padding:32px 20px;
+    overflow-y:auto;
+  }
+  .modal-overlay.open{ display:flex; align-items:flex-start; justify-content:center; }
+  .modal-box{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    max-width:780px; width:100%;
+    margin:auto;
+    padding:0 0 28px;
+    position:relative;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:14px;
+    background:var(--bg); border:1px solid var(--line);
+    color:var(--text); width:34px; height:34px; border-radius:50%;
+    cursor:pointer; font-size:1rem; z-index:2;
+  }
+  .modal-close:hover{ border-color:var(--accent); color:var(--accent); }
+  .modal-img{
+    width:100%; border-radius:14px 14px 0 0; display:block;
+    border-bottom:1px solid var(--line);
+  }
+  .modal-body{ padding:26px 28px 0; }
+  .modal-body .project-tags{ margin-bottom:14px; }
+  .modal-body h3{ font-size:1.35rem; margin-bottom:12px; }
+  .modal-body p{ color:var(--text-dim); font-size:0.95rem; }
+  .modal-body .project-meta{ margin-top:18px; }
+  .modal-full h4{
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--accent);
+    font-size:0.95rem;
+    margin:22px 0 8px;
+  }
+  .modal-full h4:first-child{ margin-top:20px; }
+  .modal-full p{ margin:0 0 4px; }
+  .modal-full ul{
+    margin:6px 0 0; padding-left:18px;
+    color:var(--text-dim); font-size:0.92rem;
+  }
+  .modal-full ul li{ margin-bottom:5px; }
+  .modal-full .outcome-block{
+    margin-top:22px; padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .project-tags{
+    display:flex; gap:8px; flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--accent);
+    border:1px solid var(--accent-dim);
+    padding:3px 8px;
+    border-radius:5px;
+  }
+  .project-card h3{ font-size:1.15rem; margin-bottom:10px; }
+  .project-card p{ color:var(--text-dim); font-size:0.92rem; flex:1; }
+  .project-meta{
+    margin-top:14px; padding-top:14px;
+    border-top:1px solid var(--line);
+    font-size:0.78rem; color:var(--text-dim);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  /* ---- Gaming section: distinct tone ---- */
+  #gaming{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(212,165,55,0.06), transparent 45%),
+      var(--bg);
+    border-bottom:none;
+  }
+  .gaming-head h2{
+    font-family:'Cinzel', serif;
+    font-weight:600;
+    font-size:1.9rem;
+    color:var(--gold);
+  }
+  .gaming-head .section-num{ color:var(--gold); }
+  .gaming-intro{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:start;
+    margin-bottom:48px;
+  }
+  @media (max-width:800px){ .gaming-intro{ grid-template-columns:1fr; } }
+  .quest-panel{
+    border:1px solid var(--gold-dim);
+    background:linear-gradient(180deg, rgba(212,165,55,0.05), transparent);
+    border-radius:var(--radius);
+    padding:26px;
+    position:relative;
+  }
+  .quest-panel::before{
+    content:"QUEST LOG";
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.15em;
+    color:var(--gold);
+    display:block;
+    margin-bottom:14px;
+  }
+  .quest-panel p{ color:var(--text-dim); font-size:0.95rem; }
+  .quest-panel p + p{ margin-top:12px; }
+
+  .yt-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .yt-card .yt-embed{
+    position:relative; width:100%; padding-top:56.25%;
+    background:#000;
+  }
+  .yt-card .yt-embed iframe{
+    position:absolute; inset:0; width:100%; height:100%; border:0;
+  }
+  .yt-card .yt-embed .yt-fallback{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding:20px;
+  }
+  .yt-info{
+    padding:16px 18px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+  }
+  .yt-info .channel{ font-weight:500; font-size:0.95rem; }
+  .yt-info .channel span{ color:var(--text-dim); font-size:0.8rem; display:block; margin-top:2px; }
+  .btn-gold{
+    border-color:var(--gold-dim); color:var(--gold);
+  }
+  .btn-gold:hover{ border-color:var(--gold); background:rgba(212,165,55,0.08); }
+
+  .uploads-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-top:16px;
+  }
+  @media (max-width:700px){ .uploads-row{ grid-template-columns:repeat(2,1fr); } }
+  .upload-thumb{
+    border-radius:8px; overflow:hidden;
+    border:1px solid var(--line);
+    aspect-ratio:16/9;
+    background:var(--panel-2);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .upload-thumb img{ width:100%; height:100%; object-fit:cover; }
+
+  .events-note{
+    margin-top:40px;
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+    padding:22px;
+    color:var(--text-dim);
+    font-size:0.9rem;
+  }
+  .events-note strong{ color:var(--text); }
+
+  .articles-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:40px;
+  }
+  @media (max-width:800px){ .articles-grid{ grid-template-columns:1fr; } }
+  .article-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    text-decoration:none;
+    display:block;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .article-card:hover{ border-color:var(--gold-dim); transform:translateY(-2px); }
+  .article-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem; color:var(--gold);
+    text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .article-card h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:1.02rem; margin:8px 0 6px;
+    color:var(--text);
+  }
+  .article-card p{ font-size:0.85rem; color:var(--text-dim); margin:0; }
+  .articles-empty{
+    margin-top:40px;
+    border:1px dashed var(--gold-dim);
+    border-radius:var(--radius);
+    padding:30px;
+    text-align:center;
+    color:var(--text-dim);
+  }
+  .articles-empty strong{ color:var(--text); display:block; margin-bottom:6px; }
+
+  footer{
+    padding:40px 0;
+    text-align:center;
+    color:var(--text-dim);
+    font-size:0.85rem;
+  }
+  footer a{ color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Mathieu<span>Skif</span></div>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#gaming">Gaming</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="search-wrap desktop-search">
+      <input type="text" class="search-input" id="siteSearch" placeholder="Search site…" aria-label="Search site">
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobilePanel">☰</button>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#gaming">Gaming</a>
+    <a href="#contact">Contact</a>
+    <div class="mobile-search">
+      <input type="text" class="search-input" id="siteSearchMobile" placeholder="Search site…" aria-label="Search site">
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="main">
+  <div class="wrap">
+    <div class="eyebrow">Data Analyst · Business Intelligence</div>
+    <h1 class="name">Mathieu Skif</h1>
+    <p class="role">I turn raw, messy data into dashboards and reports people actually use to make decisions — built in Power BI, SQL, and Excel, grounded in real regulatory and technical systems work.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#projects">View Projects</a>
+      <a class="btn btn-ghost" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/matthewskif" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+
+    <div class="kpi-strip mono">
+      <div class="kpi">
+        <div class="val">2018</div>
+        <div class="lbl">Lab Engineer since</div>
+      </div>
+      <div class="kpi">
+        <div class="val">6+</div>
+        <div class="lbl">Analytics Projects</div>
+      </div>
+      <div class="kpi">
+        <div class="val">M.A.</div>
+        <div class="lbl">Information Science</div>
+      </div>
+      <div class="kpi">
+        <div class="val">IEC·ISO·UL</div>
+        <div class="lbl">Standards Certified Work</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num mono">01</span>
+      <h2>About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a <strong>Data Analyst</strong> with a background that blends academic research, engineering, and hands-on business intelligence work. I hold an <strong>M.A. in Information Science</strong> and a <strong>B.A. in Social Sciences</strong>, both from Bar-Ilan University — training that shaped how I approach data: not just building charts, but asking what the numbers actually mean for the people using them.</p>
+        <p>Since 2018, I've worked as a <strong>Lab Engineer</strong> at the Standards Institution of Israel (SII), testing and certifying photovoltaic systems, energy storage batteries, PCS systems, and hybrid inverters against IEC, ISO, and UL standards. Day to day, that means analyzing regulatory compliance data against Israeli electricity-market and international requirements, and evaluating system performance trends to improve efficiency, reliability, and safety.</p>
+        <p>Outside of that role, I build independent BI projects — dashboards, data models, and research — spanning financial markets, real estate, and consumer behavior, several of which are detailed below.</p>
+      </div>
+      <div class="side-card">
+        <h3>Experience</h3>
+        <div class="timeline-item">
+          <div class="t-title">Lab Engineer — Energy &amp; Mechanical Systems</div>
+          <div class="t-sub">Standards Institution of Israel (SII) · Jul 2018 – Present</div>
+        </div>
+        <h3 style="margin-top:22px;">Education</h3>
+        <div class="timeline-item">
+          <div class="t-title">M.A., Information Science</div>
+          <div class="t-sub">Bar-Ilan University · 2026</div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-title">B.A., Social Sciences</div>
+          <div class="t-sub">Bar-Ilan University · 2022</div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-title">Video Game Development &amp; Design Certificate</div>
+          <div class="t-sub">Hasifa School / Open University of Israel · 2021–2023</div>
+        </div>
+        <div class="timeline-item">
+          <div class="t-title">Practical Engineer Diploma, Electrical Control &amp; Energy Systems</div>
+          <div class="t-sub">Holtz Technical College · 2012–2014</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num mono">02</span>
+      <h2>Technical &amp; Professional Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-tag">Power BI</div>
+      <div class="skill-tag">SQL (MySQL)</div>
+      <div class="skill-tag">Excel (Pivot Tables, VLOOKUP)</div>
+      <div class="skill-tag">DAX</div>
+      <div class="skill-tag">Data Modeling</div>
+      <div class="skill-tag">HTML5</div>
+      <div class="skill-tag">IBM BOSaNOVA AS400</div>
+      <div class="skill-tag">Statistics</div>
+      <div class="skill-tag">Trend Analysis</div>
+      <div class="skill-tag">Business Analytics</div>
+      <div class="skill-tag">Report Development</div>
+      <div class="skill-tag">C# (Unity)</div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num mono">03</span>
+      <h2>Featured Projects</h2>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" tabindex="0" role="button"
+        data-img="images/ta35.jpg"
+        data-title="TA-35 Israeli Stock Market Analytics Dashboard"
+        data-tags="Power BI,Kaggle,DAX"
+        data-full="full-ta35">
+        <img class="project-thumb" src="images/ta35.jpg" alt="TA-35 Israeli Stock Market Analytics Dashboard screenshot" loading="lazy">
+        <div class="project-tags"><span class="tag">Power BI</span><span class="tag">Kaggle</span><span class="tag">DAX</span></div>
+        <h3>TA-35 Israeli Stock Market Analytics Dashboard</h3>
+        <p>An interactive BI dashboard analyzing five years of trading data for the 35 largest companies on the Tel Aviv Stock Exchange. Built a structured data model with calculated DAX measures to track market capitalization, trading volume, turnover, and price trends, with dynamic filtering by company and date.</p>
+        <div class="project-meta">Data modeling · Financial KPIs · Interactive filtering</div>
+      </div>
+
+      <div class="project-card" tabindex="0" role="button"
+        data-img="images/yad2.jpg"
+        data-title="Yad2 Real Estate Market Analytics Dashboard"
+        data-tags="Power BI,Kaggle,Hebrew Data"
+        data-full="full-yad2">
+        <img class="project-thumb" src="images/yad2.jpg" alt="Yad2 Real Estate Market Analytics Dashboard screenshot" loading="lazy">
+        <div class="project-tags"><span class="tag">Power BI</span><span class="tag">Kaggle</span><span class="tag">Hebrew Data</span></div>
+        <h3>Yad2 Real Estate Market Analytics Dashboard</h3>
+        <p>A dashboard analyzing thousands of residential listings from Israel's Yad2 marketplace. Cleaned and modeled Hebrew-language listing data to surface pricing trends, city/neighborhood comparisons, and the relationship between property characteristics and asking price.</p>
+        <div class="project-meta">Data cleaning · Comparative analysis · Regional trends</div>
+      </div>
+
+      <div class="project-card" tabindex="0" role="button"
+        data-img="images/vgsales.jpg"
+        data-title="Video Game Sales Analytics &amp; Data Warehouse"
+        data-tags="Power BI,Kaggle,Metacritic"
+        data-full="full-vgsales">
+        <img class="project-thumb" src="images/vgsales.jpg" alt="Video Game Sales Analytics dashboard screenshot" loading="lazy">
+        <div class="project-tags"><span class="tag">Power BI</span><span class="tag">Kaggle</span><span class="tag">Metacritic</span></div>
+        <h3>Video Game Sales Analytics &amp; Data Warehouse</h3>
+        <p>A dimensional data warehouse (fact/dimension model) built to analyze global video game sales across platforms, genres, and regions. Enriched with Metacritic critic and user scores to explore how game quality and public perception relate to commercial performance.</p>
+        <div class="project-meta">Data warehousing · Fact/dimension modeling · Cross-source enrichment</div>
+      </div>
+
+      <div class="project-card" tabindex="0" role="button"
+        data-img="images/crossmedia.jpg"
+        data-title="Cross-Media Consumer Behavior: TV Adaptations &amp; Game Engagement"
+        data-tags="Google Trends,SteamDB,Research"
+        data-full="full-crossmedia">
+        <img class="project-thumb" src="images/crossmedia.jpg" alt="Cross-Media Consumer Behavior research charts screenshot" loading="lazy">
+        <div class="project-tags"><span class="tag">Google Trends</span><span class="tag">SteamDB</span><span class="tag">Research</span></div>
+        <h3>Cross-Media Consumer Behavior: TV Adaptations &amp; Game Engagement</h3>
+        <p>Research combining Google Trends, SteamDB player activity, and sales data to measure how TV adaptations of game franchises (The Witcher, Cyberpunk 2077, The Last of Us) affect search interest, player counts, and sales — testing whether success in one medium drives demand in another.</p>
+        <div class="project-meta">Cross-source correlation · Case study analysis</div>
+      </div>
+
+      <div class="project-card" tabindex="0" role="button"
+        data-img="images/amazon.jpg"
+        data-title="Amazon Product Review Analytics Across International Markets"
+        data-tags="Excel,Pivot Tables,Helium 10"
+        data-full="full-amazon">
+        <img class="project-thumb" src="images/amazon.jpg" alt="Amazon Product Review Analytics chart screenshot" loading="lazy">
+        <div class="project-tags"><span class="tag">Excel</span><span class="tag">Pivot Tables</span><span class="tag">Helium 10</span></div>
+        <h3>Amazon Product Review Analytics Across International Markets</h3>
+        <p>Comparative analysis of wireless earbud reviews (Apple AirPods, Samsung Galaxy Buds) across US and UK Amazon marketplaces. Combined rating distributions with qualitative review-text analysis to identify regional differences in customer expectations and satisfaction drivers.</p>
+        <div class="project-meta">Sentiment patterns · Regional comparison · SWOT analysis</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Hidden full-detail templates, cloned into the modal on click -->
+<template id="full-ta35">
+  <p>This project involved developing an interactive Business Intelligence dashboard to analyze the performance of the TA-35, Israel's leading stock market index, over a five-year period. Using historical financial market data, the dashboard provides insights into stock performance, market capitalization, trading activity, and price trends, enabling users to explore the Israeli stock market through interactive visualizations and key financial metrics.</p>
+  <h4>Data Sources</h4>
+  <p>Based on the <strong>Top 35 Israeli Stocks – 5 Years Data (TA-35)</strong> dataset from Kaggle, containing historical trading data for the 35 largest publicly traded companies on the Tel Aviv Stock Exchange (TASE), including:</p>
+  <ul>
+    <li>Stock symbol and trading date</li>
+    <li>Opening, closing, adjusted closing, high, and low prices</li>
+    <li>Daily price change (%), trading volume and turnover</li>
+    <li>Market capitalization and capital listed for trading</li>
+    <li>Number of transactions and additional market indicators</li>
+  </ul>
+  <h4>Data Architecture</h4>
+  <p>A structured Power BI data model was built using calculated measures and DAX formulas to generate financial KPIs and support dynamic filtering by company and date.</p>
+  <h4>Key Insights</h4>
+  <ul>
+    <li>Compared market capitalization across the largest publicly traded companies in Israel</li>
+    <li>Analyzed historical stock price trends over a five-year period</li>
+    <li>Evaluated trading volume, turnover, and daily price changes across the index</li>
+    <li>Identified the companies with the largest market share and strongest performance</li>
+    <li>Explored relationships between trading volume, market capitalization, and stock prices</li>
+  </ul>
+  <div class="outcome-block">
+    <h4 style="margin-top:0">Outcome</h4>
+    <p>An interactive Power BI dashboard that transforms historical stock market data into meaningful financial insights — demonstrating practical experience in financial data analysis, data modeling, DAX, business intelligence, and dashboard development.</p>
+  </div>
+</template>
+
+<template id="full-yad2">
+  <p>This project involved developing an interactive Business Intelligence dashboard to analyze residential real estate listings from the Israeli Yad2 marketplace. Using a large dataset of property listings in Hebrew, the dashboard provides insights into housing prices, property characteristics, and regional market trends to support data-driven analysis of Israel's real estate market.</p>
+  <h4>Data Sources</h4>
+  <p>Based on the <strong>Yad2 Real Estate Listings (Hebrew)</strong> dataset from Kaggle, containing thousands of residential property listings, including:</p>
+  <ul>
+    <li>City and neighborhood, property type, asking price</li>
+    <li>Number of rooms, floor and total floors, property size (m²)</li>
+    <li>Listing date and additional property characteristics/amenities</li>
+  </ul>
+  <h4>Data Architecture</h4>
+  <p>The dataset was cleaned, modeled, and processed within Power BI using calculated columns, DAX measures, and relationships supporting dynamic filtering, drill-downs, KPIs, maps, and comparative visualizations.</p>
+  <h4>Key Insights</h4>
+  <ul>
+    <li>Identified pricing trends across different cities and neighborhoods</li>
+    <li>Compared average property prices by type, size, and number of rooms</li>
+    <li>Analyzed the distribution of residential listings across the market</li>
+    <li>Highlighted regional market differences to support decision-making</li>
+  </ul>
+  <div class="outcome-block">
+    <h4 style="margin-top:0">Outcome</h4>
+    <p>An interactive Power BI dashboard that transforms real estate listing data into actionable market insights — demonstrating data cleaning, data modeling, DAX, business intelligence, and dashboard development skills.</p>
+  </div>
+</template>
+
+<template id="full-vgsales">
+  <p>This project focused on designing a Business Intelligence and Data Warehouse solution to analyze global video game sales trends and market performance, transforming raw sales information into actionable business insights for retailers, distributors, and decision-makers in the gaming industry.</p>
+  <h4>Data Sources</h4>
+  <p>The primary dataset (Kaggle) covered video game sales across PlayStation 4, Xbox One, and overall market sales — titles, release years, genres, publishers, and regional sales figures for North America, Europe, Japan, and the rest of the world. This was enriched with <strong>Metacritic</strong> data — critic scores, user ratings, review counts, and ESRB classifications.</p>
+  <h4>Data Architecture</h4>
+  <p>A dimensional data warehouse model was built using Fact and Dimension tables — the Fact table storing sales metrics, with Dimension tables organizing games, platforms, publishers, genres, regions, and years for efficient querying and visualization in Power BI.</p>
+  <h4>Key Insights</h4>
+  <ul>
+    <li>Identified the best-performing game genres, publishers, and platforms across global markets</li>
+    <li>Analyzed regional differences in gaming preferences and purchasing behavior</li>
+    <li>Evaluated the relationship between critic/user ratings and sales performance</li>
+    <li>Compared sales trends between major gaming platforms and worldwide performance</li>
+  </ul>
+  <div class="outcome-block">
+    <h4 style="margin-top:0">Outcome</h4>
+    <p>Transformed complex gaming sales data into a structured analytics platform supporting business decision-making — combining sales performance, regional trends, and review metrics to uncover market insights.</p>
+  </div>
+</template>
+
+<template id="full-crossmedia">
+  <p>This research project examined how successful entertainment products drive consumer engagement across markets and media formats — specifically, the relationship between TV series adaptations and the popularity, sales, and player activity of existing video game franchises. The central hypothesis: when an IP gains popularity in one market, consumers seek additional ways to engage with the same brand, increasing demand across other platforms.</p>
+  <h4>Data Sources</h4>
+  <ul>
+    <li><strong>Google Trends</strong> — search volume and public interest over time</li>
+    <li><strong>SteamDB</strong> — active player counts and player activity statistics</li>
+    <li><strong>Google Dataset Search</strong> — sales and market data</li>
+    <li>Industry reports and publicly available sales information</li>
+  </ul>
+  <h4>Research Methodology</h4>
+  <p>Case studies compared search interest, sales, and player activity before and after major TV adaptations released post-game: <strong>Cyberpunk 2077</strong> &amp; <em>Edgerunners</em> (Netflix), <strong>The Witcher 3</strong> &amp; <em>The Witcher</em> (Netflix), <strong>The Last of Us</strong> (HBO), plus a bonus case study on <em>The Queen's Gambit</em>'s effect on chess-related product demand.</p>
+  <h4>Key Insights</h4>
+  <ul>
+    <li>TV adaptations consistently generated renewed interest in their associated game franchises</li>
+    <li>Search activity, player engagement, and sales rose noticeably after successful adaptations</li>
+    <li>Effects were strongest when the adaptation received significant positive reception</li>
+    <li>Impact extended beyond games to related products — books, merchandise, board games</li>
+    <li>Successful IPs can create a cross-media ecosystem where growth in one market drives another</li>
+  </ul>
+  <div class="outcome-block">
+    <h4 style="margin-top:0">Outcome</h4>
+    <p>Demonstrated a strong correlation between successful media adaptations and increased engagement with related products — highlighting the commercial value of IP expansion and cross-media strategy.</p>
+  </div>
+</template>
+
+<template id="full-amazon">
+  <p>This research project explored how consumer reviews and ratings differ across international Amazon marketplaces and how these differences influence product perception — focusing on customer feedback for similar wireless earbud products across countries, to identify patterns in satisfaction, review behavior, and purchasing preferences.</p>
+  <h4>Data Sources</h4>
+  <p>Customer review data was collected from <strong>Amazon Global (US)</strong> and <strong>Amazon UK</strong>, focusing on wireless earbuds from Apple AirPods and Samsung Galaxy Buds — ratings, review content, length, and feedback. Academic literature on online reviews and consumer behavior was sourced using the AI-assisted research tool Elicit.</p>
+  <h4>Research Methodology</h4>
+  <ul>
+    <li>Collection and aggregation of ratings and written reviews across marketplaces</li>
+    <li>Comparative analysis between products, brands, and geographic regions</li>
+    <li>Statistical analysis of rating distributions and review frequencies</li>
+    <li>SWOT analysis of the research approach's strengths and limitations</li>
+    <li>AI-assisted text analytics for recurring themes and sentiment patterns</li>
+  </ul>
+  <h4>Key Insights</h4>
+  <ul>
+    <li>Reviews cluster around extreme ratings (1-star and 5-star); mid-range ratings are rarer</li>
+    <li>Review behavior varies by region, reflecting different customer expectations</li>
+    <li>Positive reviews tend to be more detailed and longer than negative ones</li>
+    <li>Top satisfaction drivers: sound quality, battery performance, ecosystem compatibility</li>
+    <li>Frequent complaints: comfort, fit, connectivity issues, product stability</li>
+  </ul>
+  <div class="outcome-block">
+    <h4 style="margin-top:0">Outcome</h4>
+    <p>Showed how customer-generated content can reveal deeper insight into consumer behavior and product performance across international markets — combining review analytics, sentiment analysis, and comparative research.</p>
+  </div>
+</template>
+
+<div class="modal-overlay" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <img class="modal-img" id="modalImg" src="" alt="">
+    <div class="modal-body">
+      <div class="project-tags" id="modalTags"></div>
+      <h3 id="modalTitle"></h3>
+      <div class="modal-full" id="modalFull"></div>
+    </div>
+  </div>
+</div>
+
+<section id="gaming">
+  <div class="wrap">
+    <div class="section-head gaming-head">
+      <span class="section-num mono">04</span>
+      <h2>Gaming</h2>
+    </div>
+
+    <div class="gaming-intro">
+      <div class="quest-panel">
+        <p>My gaming roots go back to the golden age of JRPGs — sprawling turn-based worlds, party-based strategy, and stories that took 60+ hours to unfold. That love carried straight into the 2000s MMORPG era, spending countless hours in persistent worlds built around economies, guilds, and long-term progression systems.</p>
+        <p>That same fascination with systems, economies, and player behavior is what eventually pulled me toward data analysis — I've simply swapped grinding for XP for grinding through datasets. It shows up in the research above (media/game correlation, sales analytics), and in the video content and industry coverage below.</p>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-embed" id="yt-embed-target">
+          <div class="yt-fallback" id="yt-fallback">
+            <span>Latest video loads here once connected —</span>
+            <a class="btn btn-gold" href="https://www.youtube.com/@FlaviusEnavius" target="_blank" rel="noopener">Visit Channel ↗</a>
+          </div>
+        </div>
+        <div class="yt-info">
+          <div class="channel">FlaviusEnavius <span>Gaming coverage &amp; video content</span></div>
+          <a class="btn btn-gold" href="https://www.youtube.com/@FlaviusEnavius?sub_confirmation=1" target="_blank" rel="noopener">Subscribe</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="uploads-row" id="uploadsRow" aria-label="Recent uploads"></div>
+
+    <div class="events-note">
+      <strong>Gaming events &amp; releases —</strong> coming soon. This spot is reserved for a rotating feed of upcoming game releases and industry events (conferences, showcases) relevant to the coverage above.
+    </div>
+
+    <!--
+      ARTICLES: add a new article card by copying the block below and
+      pasting it inside <div class="articles-grid">...</div>, then delete
+      the .articles-empty div once you have at least one real post.
+
+      <a class="article-card" href="YOUR_LINK_HERE" target="_blank" rel="noopener">
+        <div class="article-date">Month Year</div>
+        <h4>Article Title</h4>
+        <p>One or two sentence summary of the article.</p>
+      </a>
+    -->
+    <div class="articles-grid" id="articlesGrid"></div>
+    <div class="articles-empty" id="articlesEmpty">
+      <strong>No articles posted yet</strong>
+      This section is ready for your gaming-industry writing — reviews, analysis, coverage from events. Send Claude a link or the text and it'll be added here as a card.
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <p>Let's connect — <a href="https://www.linkedin.com/in/matthewskif" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p style="margin-top:8px; opacity:0.6;">© 2026 Mathieu Skif</p>
+  </div>
+</footer>
+
+<script>
+// Site search: scans headings/cards, jumps to + highlights first match
+(function(){
+  const inputs = [document.getElementById('siteSearch'), document.getElementById('siteSearchMobile')].filter(Boolean);
+  const targets = () => Array.from(document.querySelectorAll(
+    '.project-card, .skill-tag, .article-card, .timeline-item, .quest-panel, section h2, header.hero'
+  ));
+
+  function runSearch(query){
+    document.querySelectorAll('.search-no-match').forEach(n => n.remove());
+    const q = query.trim().toLowerCase();
+    if (!q) return;
+    const match = targets().find(el => el.textContent.toLowerCase().includes(q));
+    if (match){
+      match.scrollIntoView({ behavior:'smooth', block:'center' });
+      match.classList.remove('search-highlight');
+      void match.offsetWidth; // restart animation
+      match.classList.add('search-highlight');
+    } else {
+      const note = document.createElement('div');
+      note.className = 'search-no-match';
+      note.textContent = `No matches for "${query}"`;
+      document.body.appendChild(note);
+      setTimeout(() => note.remove(), 2200);
+    }
+  }
+
+  inputs.forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runSearch(input.value);
+    });
+  });
+})();
+</script>
+
+<script>
+// Project detail modal
+(function(){
+  const modal = document.getElementById('projectModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalFull = document.getElementById('modalFull');
+  const modalTags = document.getElementById('modalTags');
+  const closeBtn = document.getElementById('modalClose');
+  if(!modal) return;
+
+  function openModal(card){
+    modalImg.src = card.dataset.img;
+    modalImg.alt = card.dataset.title;
+    modalTitle.textContent = card.dataset.title;
+    modalTags.innerHTML = card.dataset.tags.split(',').map(t => `<span class="tag">${t}</span>`).join('');
+    const tpl = document.getElementById(card.dataset.full);
+    modalFull.innerHTML = tpl ? tpl.innerHTML : '';
+    modal.classList.add('open');
+    closeBtn.focus();
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+  }
+
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('click', () => openModal(card));
+    card.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openModal(card); }
+    });
+  });
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+})();
+</script>
+
+<script>
+// Mobile nav toggle
+(function(){
+  const btn = document.getElementById('navToggle');
+  const panel = document.getElementById('mobilePanel');
+  if(!btn || !panel) return;
+  btn.addEventListener('click', () => {
+    const open = panel.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    panel.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }));
+})();
+</script>
+
+<script>
+/*
+  Loads the latest videos from the YouTube channel via a Netlify Function
+  (netlify/functions/latest-videos.js), which uses the official YouTube
+  Data API server-side -- reliable, no CORS issues, no public relay needed.
+
+  If the function isn't deployed yet, or the API call fails for any reason,
+  this fails silently and the "Visit Channel" fallback button (already in
+  the HTML) stays visible -- nothing breaks either way.
+*/
+(async function loadLatestVideos() {
+  const embedTarget = document.getElementById('yt-embed-target');
+  const uploadsRow = document.getElementById('uploadsRow');
+
+  try {
+    const res = await fetch('/.netlify/functions/latest-videos');
+    if (!res.ok) throw new Error('function request failed');
+    const data = await res.json();
+    const videos = data.videos || [];
+    if (!videos.length) throw new Error('no videos returned');
+
+    // Latest video -> embedded player
+    const [latest, ...rest] = videos;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${latest.id}`;
+    iframe.title = latest.title || 'Latest video';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    embedTarget.innerHTML = '';
+    embedTarget.appendChild(iframe);
+
+    // Remaining videos -> recent uploads thumbnail grid
+    if (uploadsRow) {
+      rest.slice(0, 4).forEach(v => {
+        const link = document.createElement('a');
+        link.href = `https://www.youtube.com/watch?v=${v.id}`;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.className = 'upload-thumb';
+        link.title = v.title || 'Video';
+        const img = document.createElement('img');
+        img.src = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
+        img.alt = v.title || 'Video thumbnail';
+        img.loading = 'lazy';
+        link.appendChild(img);
+        uploadsRow.appendChild(link);
+      });
+    }
+  } catch (err) {
+    // Silent fail -- the "Visit Channel" fallback button remains in place.
+    console.log('Latest video auto-load skipped:', err.message);
+  }
+})();
+</script>
+
+</body>
+</html>
