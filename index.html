@@ -708,6 +708,18 @@
         <div class="project-meta">Sentiment patterns · Regional comparison · SWOT analysis</div>
       </div>
 
+      <div class="project-card" tabindex="0" role="button"
+        data-img="images/supermarket-bi.jpg"
+        data-title="Israeli Supermarket Price Comparison — Live Data Platform"
+        data-tags="Python,GitHub Actions CI/CD,Live Site"
+        data-full="full-supermarket-bi">
+        <img class="project-thumb" src="images/supermarket-bi.jpg" alt="Israeli Supermarket Price Comparison dashboard screenshot" loading="lazy">
+        <div class="project-tags"><span class="tag">Python</span><span class="tag">GitHub Actions CI/CD</span><span class="tag">Live Site</span></div>
+        <h3>Israeli Supermarket Price Comparison — Live Data Platform</h3>
+        <p>A live, publicly-deployed platform comparing grocery prices across Israel's 4 major supermarket chains, built end-to-end — an automated Python pipeline scraping official government price-transparency data daily, through GitHub Actions CI/CD, to a public dashboard with real promotional pricing, price-history trends, and an interactive store map.</p>
+        <div class="project-meta">Automated ETL pipeline · CI/CD · Public live dashboard</div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -831,6 +843,33 @@
   <div class="outcome-block">
     <h4 style="margin-top:0">Outcome</h4>
     <p>Showed how customer-generated content can reveal deeper insight into consumer behavior and product performance across international markets — combining review analytics, sentiment analysis, and comparative research.</p>
+  </div>
+</template>
+
+<template id="full-supermarket-bi">
+  <p>A publicly-deployed, fully-automated grocery price comparison platform for Israel's 4 major supermarket chains (Shufersal, Rami Levy, Yohananof, Tiv Taam) — built as a complete data product, not just a dashboard: a daily scraping pipeline, a CI/CD system, and a public web app that stays current on its own.</p>
+  <p style="margin-top:14px;"><a class="btn btn-primary" href="https://israelisupermarketcompare.netlify.app" target="_blank" rel="noopener">View Live Site ↗</a></p>
+  <h4>Data Sources</h4>
+  <p>Israel's official <strong>price-transparency regulation</strong> requires every supermarket chain to publish machine-readable store, price, and promotion files. The pipeline scrapes these directly from each chain's own publishing endpoint, parses the raw XML into a clean tabular schema, and cross-references two additional external data sources: <strong>Nominatim/OpenStreetMap</strong> for store geocoding, and <strong>data.gov.il</strong> for official municipality codes.</p>
+  <h4>Pipeline &amp; Architecture</h4>
+  <ul>
+    <li>Python ETL pipeline (pandas) runs on a daily <strong>GitHub Actions</strong> cron schedule — scrape → parse → transform → publish, fully unattended</li>
+    <li>Static site (vanilla JS, Chart.js, Leaflet) auto-deployed via Netlify on every data-refresh commit</li>
+    <li>Promotional pricing parsed directly from the government's real (and only empirically-verified, not assumed) nested XML promo schema — handling weighted/produce pricing, club-membership restrictions, and coupon-only deals correctly</li>
+    <li>Resilience built in throughout: cached fallbacks for two external APIs that proved unreliable in production, empty/malformed-data guards across the whole pipeline, and a race-condition-safe auto-commit step for the daily CI job</li>
+    <li>Monthly price-history accumulation with bounded retention, feeding a live price-trend chart</li>
+  </ul>
+  <h4>Key Features</h4>
+  <ul>
+    <li>Real-time price comparison table across all 4 chains, color-coded cheapest → most expensive</li>
+    <li>Real promotional pricing — before/after price, bundle deals ("3 for ₪X"), and expiry dates</li>
+    <li>Personal shopping-basket calculator showing which chain is cheapest overall</li>
+    <li>Interactive store-location map and price-trend history over time</li>
+    <li>Built to <strong>WCAG 2.0 AA</strong> / Israeli Standard 5568 accessibility requirements</li>
+  </ul>
+  <div class="outcome-block">
+    <h4 style="margin-top:0">Outcome</h4>
+    <p>A real, live, publicly-usable product rather than a static analysis — demonstrating end-to-end ownership of a data pipeline: unreliable external data sources, regulatory data formats, CI/CD automation, accessibility compliance, and production performance at scale (60,000+ tracked products).</p>
   </div>
 </template>
 
