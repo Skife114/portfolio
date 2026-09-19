@@ -8,6 +8,12 @@
 <meta property="og:title" content="Mathieu Skif — Data Analyst">
 <meta property="og:description" content="Power BI dashboards, data modeling, and business intelligence work — plus a look at where data meets gaming.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://capable-brigadeiros-945145.netlify.app/">
+<meta property="og:image" content="https://capable-brigadeiros-945145.netlify.app/images/ta35.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mathieu Skif — Data Analyst">
+<meta name="twitter:description" content="Power BI dashboards, data modeling, and business intelligence work — plus a look at where data meets gaming.">
+<meta name="twitter:image" content="https://capable-brigadeiros-945145.netlify.app/images/ta35.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B1F23'/%3E%3Crect x='22' y='55' width='14' height='28' fill='%234FA8D8'/%3E%3Crect x='43' y='38' width='14' height='45' fill='%234FA8D8'/%3E%3Crect x='64' y='22' width='14' height='61' fill='%234FA8D8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -965,6 +971,8 @@
     } else {
       const note = document.createElement('div');
       note.className = 'search-no-match';
+      note.setAttribute('role', 'status');
+      note.setAttribute('aria-live', 'polite');
       note.textContent = `No matches for "${query}"`;
       document.body.appendChild(note);
       setTimeout(() => note.remove(), 2200);
@@ -990,7 +998,10 @@
   const closeBtn = document.getElementById('modalClose');
   if(!modal) return;
 
+  let modalTrigger = null; // הכרטיס שפתח את המודאל - מקבל בחזרה את הפוקוס בסגירה
+
   function openModal(card){
+    modalTrigger = card;
     modalImg.src = card.dataset.img;
     modalImg.alt = card.dataset.title;
     modalTitle.textContent = card.dataset.title;
@@ -1002,6 +1013,7 @@
   }
   function closeModal(){
     modal.classList.remove('open');
+    if(modalTrigger){ modalTrigger.focus(); modalTrigger = null; }
   }
 
   document.querySelectorAll('.project-card').forEach(card => {
@@ -1012,7 +1024,22 @@
   });
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+  // לכידת פוקוס (focus trap): כשהמודאל פתוח, Tab/Shift+Tab מסתובבים רק בין
+  // האלמנטים הניתנים לפוקוס בתוכו (הכפתור לסגירה + קישורים בתוכן, כמו
+  // "View Live Site") - במקום לברוח לתוכן הדף שמאחורי ה-overlay.
+  modal.addEventListener('keydown', (e) => {
+    if(e.key !== 'Tab') return;
+    const focusable = modal.querySelectorAll('a[href], button:not([disabled])');
+    if(focusable.length === 0) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if(e.shiftKey && document.activeElement === first){
+      e.preventDefault(); last.focus();
+    } else if(!e.shiftKey && document.activeElement === last){
+      e.preventDefault(); first.focus();
+    }
+  });
 })();
 </script>
 
@@ -1042,8 +1069,14 @@
   If the function isn't deployed yet, or the API call fails for any reason,
   this fails silently and the "Visit Channel" fallback button (already in
   the HTML) stays visible -- nothing breaks either way.
+
+  Deferred until the Gaming section is actually about to scroll into view
+  (IntersectionObserver, 300px rootMargin) instead of running immediately
+  on page load - a YouTube iframe embed pulls in a meaningful amount of
+  its own JS/resources, and the Gaming section sits below About/Skills/
+  Projects, so most visitors would pay that cost before ever seeing it.
 */
-(async function loadLatestVideos() {
+async function loadLatestVideos() {
   const embedTarget = document.getElementById('yt-embed-target');
   const uploadsRow = document.getElementById('uploadsRow');
 
@@ -1085,7 +1118,22 @@
     // Silent fail -- the "Visit Channel" fallback button remains in place.
     console.log('Latest video auto-load skipped:', err.message);
   }
-})();
+}
+
+const gamingSection = document.getElementById('gaming');
+if (gamingSection && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    if (entries.some(e => e.isIntersecting)) {
+      loadLatestVideos();
+      obs.disconnect();
+    }
+  }, { rootMargin: '300px' });
+  observer.observe(gamingSection);
+} else {
+  // דפדפן ללא תמיכה ב-IntersectionObserver (נדיר מאוד כיום) - נטען מיד
+  // כמו קודם, במקום שהסקשן פשוט יישאר ריק לצמיתות.
+  loadLatestVideos();
+}
 </script>
 
 </body>

@@ -35,11 +35,7 @@ exports.handler = async function () {
       return {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          videos: [],
-          error: "channel_not_found",
-          debug_raw: channelData,
-        }),
+        body: JSON.stringify({ videos: [], error: "channel_not_found" }),
       };
     }
 
