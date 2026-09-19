@@ -82,7 +82,7 @@
     .navlinks{ display:none; }
     .nav-toggle{
       display:flex; align-items:center; justify-content:center;
-      width:38px; height:38px;
+      width:44px; height:44px; /* WCAG 2.5.5 recommended minimum touch target - was 38px */
       background:none; border:1px solid var(--line); border-radius:8px;
       color:var(--text); cursor:pointer;
     }
@@ -920,14 +920,20 @@
 
     <div class="uploads-row" id="uploadsRow" aria-label="Recent uploads"></div>
 
+    <!--
+      Hidden until there's real content (placeholder read as an unfinished
+      site to visitors) - uncomment when ready to show a real events/release
+      feed.
     <div class="events-note">
       <strong>Gaming events &amp; releases —</strong> coming soon. This spot is reserved for a rotating feed of upcoming game releases and industry events (conferences, showcases) relevant to the coverage above.
     </div>
+    -->
 
     <!--
       ARTICLES: add a new article card by copying the block below and
-      pasting it inside <div class="articles-grid">...</div>, then delete
-      the .articles-empty div once you have at least one real post.
+      pasting it inside <div class="articles-grid">...</div>, then remove
+      the "Hidden until..." comment wrapper below once you have at least
+      one real post.
 
       <a class="article-card" href="YOUR_LINK_HERE" target="_blank" rel="noopener">
         <div class="article-date">Month Year</div>
@@ -936,10 +942,14 @@
       </a>
     -->
     <div class="articles-grid" id="articlesGrid"></div>
+    <!--
+      Hidden until there's real content (placeholder read as an unfinished
+      site to visitors) - uncomment when the first article card above is added.
     <div class="articles-empty" id="articlesEmpty">
       <strong>No articles posted yet</strong>
       This section is ready for your gaming-industry writing — reviews, analysis, coverage from events. Send Claude a link or the text and it'll be added here as a card.
     </div>
+    -->
   </div>
 </section>
 

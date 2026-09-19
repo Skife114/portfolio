@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://capable-brigadeiros-945145.netlify.app/sitemap.xml
