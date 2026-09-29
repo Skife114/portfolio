@@ -5,6 +5,16 @@
 // (set in Netlify: Project configuration -> Environment variables).
 
 const HANDLE = "FlaviusEnavius";
+const FETCH_TIMEOUT_MS = 5000;
+
+// fetch() has no built-in timeout - without this, a YouTube API call that
+// merely hangs (not errors) blocks the function until Netlify's own
+// execution limit instead of degrading to the fallback UI quickly.
+function fetchWithTimeout(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+}
 
 exports.handler = async function () {
   const API_KEY = process.env.YOUTUBE_API_KEY;
@@ -21,7 +31,7 @@ exports.handler = async function () {
     const channelUrl =
       `https://www.googleapis.com/youtube/v3/channels` +
       `?part=contentDetails&forHandle=${HANDLE}&key=${API_KEY}`;
-    const channelRes = await fetch(channelUrl);
+    const channelRes = await fetchWithTimeout(channelUrl);
     const channelData = await channelRes.json();
 
     const uploadsPlaylistId =
@@ -42,7 +52,7 @@ exports.handler = async function () {
     const itemsUrl =
       `https://www.googleapis.com/youtube/v3/playlistItems` +
       `?part=snippet&maxResults=5&playlistId=${uploadsPlaylistId}&key=${API_KEY}`;
-    const itemsRes = await fetch(itemsUrl);
+    const itemsRes = await fetchWithTimeout(itemsUrl);
     const itemsData = await itemsRes.json();
 
     const videos = (itemsData.items || [])

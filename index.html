@@ -17,7 +17,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B1F23'/%3E%3Crect x='22' y='55' width='14' height='28' fill='%234FA8D8'/%3E%3Crect x='43' y='38' width='14' height='45' fill='%234FA8D8'/%3E%3Crect x='64' y='22' width='14' height='61' fill='%234FA8D8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cinzel:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cinzel:wght@500;600&display=swap" rel="stylesheet"></noscript>
 <style>
   :root{
     --bg: #1B1F23;
@@ -568,7 +569,7 @@
         <div class="lbl">Lab Engineer since</div>
       </div>
       <div class="kpi">
-        <div class="val">6+</div>
+        <div class="val">6</div>
         <div class="lbl">Analytics Projects</div>
       </div>
       <div class="kpi">
@@ -854,7 +855,10 @@
 
 <template id="full-supermarket-bi">
   <p>A publicly-deployed, fully-automated grocery price comparison platform for Israel's 4 major supermarket chains (Shufersal, Rami Levy, Yohananof, Tiv Taam) — built as a complete data product, not just a dashboard: a daily scraping pipeline, a CI/CD system, and a public web app that stays current on its own.</p>
-  <p style="margin-top:14px;"><a class="btn btn-primary" href="https://israelisupermarketcompare.netlify.app" target="_blank" rel="noopener">View Live Site ↗</a></p>
+  <p style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+    <a class="btn btn-primary" href="https://israelisupermarketcompare.netlify.app" target="_blank" rel="noopener">View Live Site ↗</a>
+    <a class="btn btn-ghost" href="https://github.com/Skife114/israeli-supermarket-bi" target="_blank" rel="noopener">View Source ↗</a>
+  </p>
   <h4>Data Sources</h4>
   <p>Israel's official <strong>price-transparency regulation</strong> requires every supermarket chain to publish machine-readable store, price, and promotion files. The pipeline scrapes these directly from each chain's own publishing endpoint, parses the raw XML into a clean tabular schema, and cross-references two additional external data sources: <strong>Nominatim/OpenStreetMap</strong> for store geocoding, and <strong>data.gov.il</strong> for official municipality codes.</p>
   <h4>Pipeline &amp; Architecture</h4>
